@@ -1,65 +1,174 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, useEffect } from "react";
+import AICopilot from "@/components/AICopilot";
+import { CheckCircle2, AlertTriangle, TrendingUp, Clock, Target, Loader2 } from "lucide-react";
+import { ApiService, DashboardMetrics } from "@/lib/api";
+
+export default function CommandDashboard() {
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function fetchMetrics() {
+      try {
+        const data = await ApiService.getDashboardMetrics();
+        setMetrics(data);
+      } catch (err) {
+        console.error("Failed to load dashboard metrics", err);
+        setError("Failed to load dashboard data.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchMetrics();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="w-10 h-10 animate-spin text-[var(--aurora-pink)]" />
+      </div>
+    );
+  }
+
+  if (error || !metrics) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
+          <p className="text-white/60 text-lg">{error || "No data available"}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="p-6 md:p-10 max-w-7xl mx-auto h-full overflow-y-auto w-full">
+      <header className="mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Command Dashboard</h1>
+          <p className="text-white/60 text-base md:text-lg">Executive snapshot for multiple entities.</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="text-left md:text-right w-full md:w-auto bg-white/5 md:bg-transparent p-4 md:p-0 rounded-2xl md:rounded-none border border-white/5 md:border-none">
+          <p className="text-sm md:text-base font-mono text-white/50 mb-1">Strategic Score</p>
+          <div className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--aurora-pink)] to-[var(--deep-rose-end)]">
+            {metrics.strategicScore}<span className="text-xl md:text-2xl text-white/30 font-normal">/100</span>
+          </div>
         </div>
-      </main>
+      </header>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 pb-20">
+        {/* Main Content Area */}
+        <div className="xl:col-span-2 space-y-8">
+
+          {/* Active Roles Overview — from real data */}
+          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+            <h2 className="text-xl md:text-2xl font-semibold mb-6 flex items-center gap-3">
+              <Target className="w-6 h-6 text-[var(--aurora-pink)]" />
+              Active Roles Concentration
+            </h2>
+            <div className="space-y-6">
+              {metrics.roleConcentration.length > 0 ? (
+                metrics.roleConcentration.map((role, idx) => (
+                  <div key={idx} className="relative">
+                    <div className="flex justify-between text-base md:text-lg mb-2">
+                      <span className={idx === 0 ? "font-medium text-white/90" : "text-white/70"}>
+                        {role.name} — {role.title}
+                      </span>
+                      <span className={`font-mono ${idx === 0 ? "text-[var(--aurora-pink)] font-bold" : "text-white/50"}`}>
+                        {role.percentage}%
+                      </span>
+                    </div>
+                    <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${idx === 0 ? "bg-gradient-to-r from-[var(--aurora-pink)] to-[var(--deep-rose-end)]" : "bg-white/20"}`}
+                        style={{ width: `${role.percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-white/40 text-center py-4">No roles configured yet. Add roles in the Role Switch panel.</p>
+              )}
+            </div>
+          </section>
+
+          {/* Deep Work Blocks & Conflicts */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+              <h2 className="text-xl md:text-2xl font-semibold mb-6 flex items-center gap-3">
+                <Clock className="w-6 h-6 text-[var(--aurora-pink)]" />
+                Deep Work Allocation
+              </h2>
+              <div className="space-y-4">
+                {metrics.deepWorkBlocks.length > 0 ? (
+                  metrics.deepWorkBlocks.map((block, idx) => {
+                    const start = new Date(block.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const end = new Date(block.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return (
+                      <div key={idx} className={`p-4 md:p-5 rounded-xl bg-black/30 border ${idx === 0 ? "border-[var(--aurora-pink)]/30 border-l-4 border-l-[var(--aurora-pink)]" : "border-white/10 border-l-4 border-l-white/30"}`}>
+                        <p className={`text-base md:text-lg ${idx === 0 ? "font-semibold text-white" : "font-medium text-white/80"}`}>{block.title}</p>
+                        <p className={`text-sm md:text-base mt-2 font-mono ${idx === 0 ? "text-[var(--aurora-pink)]" : "text-white/50"}`}>
+                          {start} — {end}{block.context ? ` | ${block.context}` : ''}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-white/40 text-center py-4">No deep work blocks scheduled today.</p>
+                )}
+              </div>
+            </section>
+
+            <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+              <h2 className="text-xl md:text-2xl font-semibold mb-6 flex items-center gap-3">
+                <AlertTriangle className="w-6 h-6 text-amber-500" />
+                Conflict Detection
+              </h2>
+              {metrics.conflicts.length > 0 ? (
+                <div className="p-5 md:p-6 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                  <p className="text-base md:text-lg text-amber-300 leading-relaxed font-semibold mb-3">
+                    {metrics.conflicts.length} conflict{metrics.conflicts.length > 1 ? 's' : ''} detected.
+                  </p>
+                  {metrics.conflicts.map((conflict, idx) => (
+                    <p key={idx} className="text-sm md:text-base text-amber-200/70 mb-3 leading-relaxed">
+                      {conflict.message}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-5 md:p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <p className="text-base md:text-lg text-emerald-300 leading-relaxed font-semibold">
+                    No conflicts detected. Schedule is clear.
+                  </p>
+                </div>
+              )}
+            </section>
+          </div>
+        </div>
+
+        {/* Sidebar / Copilot Area */}
+        <div className="space-y-8">
+          <section className="bg-gradient-to-b from-[var(--aurora-pink)]/10 to-transparent border border-[var(--aurora-pink)]/20 rounded-2xl p-6 md:p-8">
+            <h2 className="text-xl md:text-2xl font-semibold mb-5 flex items-center gap-3 text-[var(--aurora-pink)]">
+              <TrendingUp className="w-6 h-6" />
+              Intelligence Brief
+            </h2>
+            <ul className="space-y-5 text-base md:text-lg text-white/80">
+              {metrics.briefItems.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-3 bg-white/5 p-4 rounded-xl border border-white/10">
+                  <CheckCircle2 className="w-6 h-6 text-[var(--aurora-pink)] mt-0.5 shrink-0" />
+                  <span className="leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <AICopilot />
+        </div>
+      </div>
     </div>
   );
 }
