@@ -5,8 +5,7 @@
  * All endpoints use JWT Bearer auth from localStorage.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
-
+const API_BASE_URL = "https://chief360-backend-production.up.railway.app/api";
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 interface RequestOptions {
