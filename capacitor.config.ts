@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Chief360 Copilot',
   webDir: 'out',
   server: {
-    url: 'https://chief360-web-production.up.railway.app',
+    url: 'https://chief360-web.vercel.app',
     cleartext: true
   }
 };
