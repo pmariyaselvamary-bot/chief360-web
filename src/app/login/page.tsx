@@ -257,7 +257,7 @@ export default function LoginPage() {
 
 
 
-                                    <label className="input-label">Password</label><div style={{position:'relative'}}><input type={showPassword ? "text" : "password"} className="input-field" required value={password} onChange={(e) => setPassword(e.target.value)} style={{paddingRight:'40px'}} /><button type="button" onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:'10px',top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:'#aaa',fontSize:'18px'}}>{showPassword ? '🙈' : '👁️'}</button>                                                       <input type="password" className="input-field" required value={password} onChange={(e) =
+                                    <label className="input-label">Password</label><div style={{position:'relative'}}><input type={showPassword ? "text" : "password"} className="input-field" required value={password} onChange={(e) => setPassword(e.target.value)} style={{paddingRight:'40px'}} /><button type="button" onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:'10px',top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:'#aaa',fontSize:'18px'}}>{showPassword ? '🙈' : '👁️'}</button>                                                       
                                 </div>
                                 <button className="submit-btn" onMouseDown={handleRipple} type="submit">ACCESS DASHBOARD</button>
                             </>
