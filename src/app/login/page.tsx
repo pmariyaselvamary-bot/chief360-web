@@ -58,6 +58,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [twoFactorCode, setTwoFactorCode] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     // --- 3D Tilt Logic Removed ---
 
@@ -253,8 +254,10 @@ export default function LoginPage() {
                                     <input type="email" className="input-field" required value={email} onChange={(e) => setEmail(e.target.value)} />
                                 </div>
                                 <div className="input-group">
-                                    <label className="input-label">Password</label>
-                                    <input type="password" className="input-field" required value={password} onChange={(e) => setPassword(e.target.value)} />
+
+
+
+                                    <label className="input-label">Password</label><div style={{position:'relative'}}><input type={showPassword ? "text" : "password"} className="input-field" required value={password} onChange={(e) => setPassword(e.target.value)} style={{paddingRight:'40px'}} /><button type="button" onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:'10px',top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:'#aaa',fontSize:'18px'}}>{showPassword ? '🙈' : '👁️'}</button>                                                       <input type="password" className="input-field" required value={password} onChange={(e) =
                                 </div>
                                 <button className="submit-btn" onMouseDown={handleRipple} type="submit">ACCESS DASHBOARD</button>
                             </>
