@@ -9,6 +9,8 @@ export default function SchedulePage() {
     const [timeBlocks, setTimeBlocks] = useState<ScheduleBlock[]>([]);
     const [tasks, setTasks] = useState<TaskItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showAddBlock, setShowAddBlock] = useState(false);
+    const [newBlock, setNewBlock] = useState({ title: '', type: 'working', startTime: '', endTime: '' });
 
     useEffect(() => {
         async function fetchPipeline() {
@@ -96,6 +98,16 @@ export default function SchedulePage() {
             </div>
         );
     }
+    const handleAddBlock = async () => {
+    try {
+        const saved = await ApiService.createSchedule(newBlock);
+        setTimeBlocks(prev => [...prev, saved]);
+        setShowAddBlock(false);
+        setNewBlock({ title: '', type: 'working', startTime: '', endTime: '' });
+    } catch (error) {
+        console.error("Failed to add block", error);
+    }
+};
 
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto h-full overflow-y-auto w-full">
@@ -129,10 +141,31 @@ export default function SchedulePage() {
                             <Calendar className="w-6 h-6 text-[var(--aurora-pink)]" />
                             Time Table
                         </h2>
-                        <button className="text-sm font-bold text-[var(--aurora-pink)] hover:bg-[var(--aurora-pink)]/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                        <button 
+                            onClick={() => setShowAddBlock(true)}
+                            className="text-sm font-bold text-[var(--aurora-pink)] hover:bg-[var(--aurora-pink)]/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
                             <Plus className="w-4 h-4" /> Add Block
                         </button>
                     </div>
+                    {showAddBlock && (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="bg-[#1A1A1A] border border-white/10 rounded-2xl p-6 w-full max-w-md space-y-4">
+            <h3 className="text-xl font-bold">Add Schedule Block</h3>
+            <input type="text" placeholder="Title" value={newBlock.title} onChange={(e) => setNewBlock({...newBlock, title: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-[var(--aurora-pink)]" />
+            <select value={newBlock.type} onChange={(e) => setNewBlock({...newBlock, type: e.target.value})} className="w-full bg-[#1A1A1A] border border-white/10 rounded-xl p-3 text-white focus:outline-none">
+                <option value="working">Working</option>
+                <option value="planning">Planning</option>
+                <option value="free">Free</option>
+            </select>
+            <input type="datetime-local" value={newBlock.startTime} onChange={(e) => setNewBlock({...newBlock, startTime: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none" />
+            <input type="datetime-local" value={newBlock.endTime} onChange={(e) => setNewBlock({...newBlock, endTime: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none" />
+            <div className="flex gap-3">
+                <button onClick={() => setShowAddBlock(false)} className="flex-1 py-3 rounded-xl border border-white/10 text-white/60 hover:bg-white/5">Cancel</button>
+                <button onClick={handleAddBlock} className="flex-1 py-3 rounded-xl bg-[var(--aurora-pink)] text-white font-bold hover:opacity-90">Add Block</button>
+            </div>
+        </div>
+    </div>
+)}
 
                     <div className="bg-white/5 border border-white/10 rounded-2xl p-6 relative">
                         <div className="absolute left-[39px] md:left-[55px] top-8 bottom-8 w-px bg-white/10" />
