@@ -9,6 +9,8 @@ export default function SchedulePage() {
     const [timeBlocks, setTimeBlocks] = useState<ScheduleBlock[]>([]);
     const [tasks, setTasks] = useState<TaskItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showAddTask, setShowAddTask] = useState(false);
+    const [newTask, setNewTask] = useState({ title: '', context: '', deadline: '', highImpact: false });
     const [showAddBlock, setShowAddBlock] = useState(false);
     const [newBlock, setNewBlock] = useState({ title: '', type: 'working', startTime: '', endTime: '' });
 
@@ -104,7 +106,17 @@ export default function SchedulePage() {
         setTimeBlocks(prev => [...prev, saved]);
         setShowAddBlock(false);
         setNewBlock({ title: '', type: 'working', startTime: '', endTime: '' });
+    }
+    const handleAddTask = async () => {
+    try {
+        const saved = await ApiService.createTask(newTask);
+        setTasks(prev => [...prev, saved]);
+        setShowAddTask(false);
+        setNewTask({ title: '', context: '', deadline: '', highImpact: false });
     } catch (error) {
+        console.error("Failed to add task", error);
+    }
+};catch (error) {
         console.error("Failed to add block", error);
     }
 };
@@ -166,6 +178,24 @@ export default function SchedulePage() {
         </div>
     </div>
 )}
+                    {showAddTask && (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="bg-[#1A1A1A] border border-white/10 rounded-2xl p-6 w-full max-w-md space-y-4">
+            <h3 className="text-xl font-bold">Add Task</h3>
+            <input type="text" placeholder="Task Title" value={newTask.title} onChange={(e) => setNewTask({...newTask, title: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-amber-500" />
+            <input type="text" placeholder="Context (e.g. Marketing)" value={newTask.context} onChange={(e) => setNewTask({...newTask, context: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-amber-500" />
+            <input type="datetime-local" value={newTask.deadline} onChange={(e) => setNewTask({...newTask, deadline: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none" />
+            <label className="flex items-center gap-3 text-white/70 cursor-pointer">
+                <input type="checkbox" checked={newTask.highImpact} onChange={(e) => setNewTask({...newTask, highImpact: e.target.checked})} className="w-4 h-4" />
+                High Impact Task
+            </label>
+            <div className="flex gap-3">
+                <button onClick={() => setShowAddTask(false)} className="flex-1 py-3 rounded-xl border border-white/10 text-white/60 hover:bg-white/5">Cancel</button>
+                <button onClick={handleAddTask} className="flex-1 py-3 rounded-xl bg-amber-500 text-white font-bold hover:opacity-90">Add Task</button>
+            </div>
+        </div>
+    </div>
+)}
 
                     <div className="bg-white/5 border border-white/10 rounded-2xl p-6 relative">
                         <div className="absolute left-[39px] md:left-[55px] top-8 bottom-8 w-px bg-white/10" />
@@ -206,9 +236,11 @@ export default function SchedulePage() {
                             <CheckCircle2 className="w-6 h-6 text-amber-500" />
                             Active Deadlines
                         </h2>
-                        <button className="text-sm font-bold text-amber-500 hover:bg-amber-500/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
-                            <Plus className="w-4 h-4" /> Task
-                        </button>
+                        <button 
+    onClick={() => setShowAddTask(true)}
+    className="text-sm font-bold text-amber-500 hover:bg-amber-500/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+    <Plus className="w-4 h-4" /> Task
+</button>
                     </div>
 
                     <div className="space-y-3">
