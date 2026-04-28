@@ -23,3 +23,32 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+html.light {
+  --background: #F8F9FA;
+  --foreground: #121212;
+}
+
+html.light body {
+  background-color: #F8F9FA;
+  color: #121212;
+}
+
+html.light .bg-white\/5 {
+  background-color: rgba(0,0,0,0.05) !important;
+}
+
+html.light .text-white\/60 {
+  color: rgba(0,0,0,0.6) !important;
+}
+
+html.light .text-white\/80 {
+  color: rgba(0,0,0,0.8) !important;
+}
+
+html.light .border-white\/10 {
+  border-color: rgba(0,0,0,0.1) !important;
+}
+
+html.light .bg-background {
+  background-color: #F8F9FA !important;
+}
