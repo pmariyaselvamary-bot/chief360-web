@@ -95,3 +95,11 @@ html.light .bg-\[\#1A1A1A\]\/90 {
 html.light .text-foreground {
   color: #121212 !important;
 }
+html.light aside {
+  background-color: #f0f0f0 !important;
+  border-color: rgba(0,0,0,0.1) !important;
+}
+
+html.light .bg-\[\#1A1A1A\] {
+  background-color: #f0f0f0 !important;
+}
