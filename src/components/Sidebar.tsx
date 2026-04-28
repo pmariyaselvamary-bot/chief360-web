@@ -3,13 +3,14 @@
 import { LayoutDashboard, Users, BrainCircuit, Activity, Settings, Bell, Search, X, Calendar, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolean) => void }) {
     const pathname = usePathname();
+    const router = useRouter();
     const { user } = useAuthStore();
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
