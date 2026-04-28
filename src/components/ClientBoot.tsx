@@ -13,7 +13,7 @@ export default function ClientBoot({ children }: { children: React.ReactNode }) 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isDark, setIsDark] = useState(true);
     useEffect(() => {
-        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.className = isDark ? 'dark' : 'light';
     }, [isDark]);
     const pathname = usePathname();
     const router = useRouter();
