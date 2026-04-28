@@ -9,6 +9,39 @@ export default function CommandDashboard() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  useEffect(() => {
+    if ('Notification' in window) {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!metrics) return;
+    const checkSchedules = async () => {
+      try {
+        const { ApiService } = await import('@/lib/api');
+        const schedules = await ApiService.getSchedules();
+        const now = new Date();
+        schedules.forEach((schedule: any) => {
+          const start = new Date(schedule.startTime);
+          const diff = (start.getTime() - now.getTime()) / 60000;
+          if (diff > 9 && diff < 11) {
+            if (Notification.permission === 'granted') {
+              new Notification('Chief360 Reminder', {
+                body: `"${schedule.title}" starts in 10 minutes!`,
+                icon: '/assets/chief360-removebg.png'
+              });
+            }
+          }
+        });
+      } catch (err) {
+        console.error('Notification check failed', err);
+      }
+    };
+    const interval = setInterval(checkSchedules, 60000);
+    checkSchedules();
+    return () => clearInterval(interval);
+  }, [metrics]);
 
   useEffect(() => {
     async function fetchMetrics() {
