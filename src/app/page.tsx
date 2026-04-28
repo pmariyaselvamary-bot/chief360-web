@@ -205,22 +205,3 @@ export default function CommandDashboard() {
     </div>
   );
 }
-html.light .text-emerald-300 {
-  color: #047857 !important;
-}
-
-html.light .text-amber-300 {
-  color: #b45309 !important;
-}
-
-html.light .text-amber-200\/70 {
-  color: rgba(120,53,15,0.8) !important;
-}
-
-html.light .bg-emerald-500\/10 {
-  background-color: rgba(5,150,105,0.1) !important;
-}
-
-html.light .border-emerald-500\/20 {
-  border-color: rgba(5,150,105,0.3) !important;
-}
