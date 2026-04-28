@@ -50,7 +50,10 @@ export default function ClientBoot({ children }: { children: React.ReactNode }) 
                         <Image src="/assets/chief360-black bg.png" alt="Chief360 Copilot App Logo" fill className="object-contain" priority />
                     </div>
                     <button onClick={() => setIsDark(!isDark)} className="p-2 text-white/80 hover:text-white bg-white/5 rounded-md mr-2">
-                        {isDark ? '☀️' : '🌙'}
+                        <div style={{width:'44px',height:'24px',borderRadius:'12px',background:isDark?'#333':'#f0c040',position:'relative',transition:'background 0.3s'}}>
+                            <div style={{width:'20px',height:'20px',borderRadius:'50%',background:isDark?'#aaa':'#fff',position:'absolute',top:'2px',left:isDark?'2px':'22px',transition:'left 0.3s',boxShadow:'0 1px 3px rgba(0,0,0,0.3)'}}>
+                            </div>
+                        </div>
                     </button>
                     <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 text-white/80 hover:text-white bg-white/5 rounded-md">
                         {isSidebarOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
