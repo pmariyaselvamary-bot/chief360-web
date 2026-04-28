@@ -13,8 +13,8 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
     const filteredNav = navItems.filter(item => 
-        item.name.toLowerCase().includes(search.toLowerCase())
-                                       );
+    item.name.toLowerCase().includes(search.toLowerCase())
+);
     const toggleTheme = () => {
     const newMode = !isDark;
         setIsDark(newMode);
