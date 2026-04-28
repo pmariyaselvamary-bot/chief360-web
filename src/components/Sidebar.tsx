@@ -11,6 +11,10 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const pathname = usePathname();
     const { user } = useAuthStore();
     const [isDark, setIsDark] = useState(true);
+    const [search, setSearch] = useState('');
+    const filteredNav = navItems.filter(item => 
+        item.name.toLowerCase().includes(search.toLowerCase())
+                                       );
     const toggleTheme = () => {
     const newMode = !isDark;
         setIsDark(newMode);
@@ -53,12 +57,14 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
                     <input
                         type="text"
                         placeholder="Command search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                         className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-base focus:outline-none focus:ring-1 focus:ring-[var(--aurora-pink)] text-white/90 placeholder:text-white/40 transition-all font-mono"
-                    />
+                        />
                 </div>
 
                 <nav className="flex-1 px-4 space-y-3 overflow-y-auto">
-                    {navItems.map((item) => {
+                    {filteredNav.map((item) => {
                         const isActive = pathname === item.href;
                         const Icon = item.icon;
 
