@@ -116,7 +116,7 @@ export default function SchedulePage() {
     } catch (error) {
         console.error("Failed to add task", error);
     }
-};catch (error) {
+        } catch (error) {
         console.error("Failed to add block", error);
     }
 };
