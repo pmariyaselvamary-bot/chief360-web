@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolean) => void }) {
     const pathname = usePathname();
@@ -61,7 +62,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
                         onChange={(e) => setSearch(e.target.value)}
                         onKeyDown={(e) => {
     if (e.key === 'Enter' && filteredNav.length > 0) {
-        window.location.href = filteredNav[0].href;
+      router.push(filteredNav[0].href);
         setSearch('');
         setIsOpen(false);
     }
