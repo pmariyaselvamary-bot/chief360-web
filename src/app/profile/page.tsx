@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { ApiService, UserProfile } from "@/lib/api";
 
 export default function ProfilePage() {
-    const { user, updateAvatar } = useAuthStore();
+    const { user, updateAvatar, logout } = useAuthStore();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -127,6 +127,14 @@ export default function ProfilePage() {
                         </div>
                     </div>
                 </section>
+                <section className="pb-6">
+    <button
+        onClick={() => { logout(); window.location.href = '/login'; }}
+        className="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all font-semibold text-lg tracking-wide"
+    >
+        Sign Out
+    </button>
+</section>
             </div>
         </div>
     );
