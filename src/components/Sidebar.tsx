@@ -12,9 +12,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const { user } = useAuthStore();
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
-    const filteredNav = navItems.filter(item => 
-    item.name.toLowerCase().includes(search.toLowerCase())
-);
     const toggleTheme = () => {
     const newMode = !isDark;
         setIsDark(newMode);
@@ -27,6 +24,9 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
         { name: "Strategic Intelligence", href: "/intelligence", icon: BrainCircuit },
         { name: "Performance", href: "/performance", icon: Activity },
     ];
+    const filteredNav = navItems.filter(item => 
+        item.name.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
         <>
