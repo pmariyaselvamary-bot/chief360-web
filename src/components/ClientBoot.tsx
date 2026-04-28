@@ -11,6 +11,10 @@ import { useAuthStore } from "@/store/useAuthStore";
 export default function ClientBoot({ children }: { children: React.ReactNode }) {
     const [isBooting, setIsBooting] = useState(true);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isDark, setIsDark] = useState(true);
+    useEffect(() => {
+        document.documentElement.classList.toggle('dark', isDark);
+    }, [isDark]);
     const pathname = usePathname();
     const router = useRouter();
     const { isAuthenticated } = useAuthStore();
@@ -23,7 +27,7 @@ export default function ClientBoot({ children }: { children: React.ReactNode }) 
 
     // Close sidebar on navigation
     useEffect(() => {
-setTimeout(() => { setIsSidebarOpen(false); }, 0);
+        setTimeout(() => { setIsSidebarOpen(false); }, 0);
     }, [pathname]);
 
     if (pathname === "/login") {
@@ -45,6 +49,9 @@ setTimeout(() => { setIsSidebarOpen(false); }, 0);
                     <div className="relative w-40 h-12">
                         <Image src="/assets/chief360-black bg.png" alt="Chief360 Copilot App Logo" fill className="object-contain" priority />
                     </div>
+                    <button onClick={() => setIsDark(!isDark)} className="p-2 text-white/80 hover:text-white bg-white/5 rounded-md mr-2">
+                        {isDark ? '☀️' : '🌙'}
+                    </button>
                     <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 text-white/80 hover:text-white bg-white/5 rounded-md">
                         {isSidebarOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
                     </button>
