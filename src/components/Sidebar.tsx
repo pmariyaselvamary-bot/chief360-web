@@ -59,6 +59,13 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
                         placeholder="Command search..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        onKeyDown={(e) => {
+    if (e.key === 'Enter' && filteredNav.length > 0) {
+        window.location.href = filteredNav[0].href;
+        setSearch('');
+        setIsOpen(false);
+    }
+}}
                         className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-base focus:outline-none focus:ring-1 focus:ring-[var(--aurora-pink)] text-white/90 placeholder:text-white/40 transition-all font-mono"
                         />
                 </div>
