@@ -173,7 +173,7 @@ export default function CommandDashboard() {
                 </div>
               ) : (
                 <div className="p-5 md:p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                  <p className="text-base md:text-lg text-emerald-300 leading-relaxed font-semibold">
+                 <p className="text-base md:text-lg leading-relaxed font-semibold" style={{color: 'var(--conflict-ok-color, #10b981)'}}>
                     No conflicts detected. Schedule is clear.
                   </p>
                 </div>
