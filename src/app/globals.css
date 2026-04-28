@@ -52,3 +52,46 @@ html.light .border-white\/10 {
 html.light .bg-background {
   background-color: #F8F9FA !important;
 }
+html.light .text-white {
+  color: #121212 !important;
+}
+
+html.light .text-white\/90 {
+  color: rgba(0,0,0,0.9) !important;
+}
+
+html.light .text-white\/70 {
+  color: rgba(0,0,0,0.7) !important;
+}
+
+html.light .text-white\/50 {
+  color: rgba(0,0,0,0.5) !important;
+}
+
+html.light .text-white\/40 {
+  color: rgba(0,0,0,0.4) !important;
+}
+
+html.light .text-white\/30 {
+  color: rgba(0,0,0,0.3) !important;
+}
+
+html.light .bg-black\/30 {
+  background-color: rgba(255,255,255,0.7) !important;
+}
+
+html.light .bg-white\/5 {
+  background-color: rgba(0,0,0,0.05) !important;
+}
+
+html.light .border-white\/5 {
+  border-color: rgba(0,0,0,0.05) !important;
+}
+
+html.light .bg-\[\#1A1A1A\]\/90 {
+  background-color: rgba(255,255,255,0.95) !important;
+}
+
+html.light .text-foreground {
+  color: #121212 !important;
+}
