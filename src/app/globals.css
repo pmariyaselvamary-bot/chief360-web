@@ -103,3 +103,22 @@ html.light aside {
 html.light .bg-\[\#1A1A1A\] {
   background-color: #f0f0f0 !important;
 }
+html.light .text-emerald-400 {
+  color: #059669 !important;
+}
+
+html.light .text-amber-400 {
+  color: #d97706 !important;
+}
+
+html.light .text-amber-500 {
+  color: #b45309 !important;
+}
+
+html.light .bg-emerald-500\/10 {
+  background-color: rgba(5,150,105,0.15) !important;
+}
+
+html.light .border-emerald-500\/30 {
+  border-color: rgba(5,150,105,0.3) !important;
+}
