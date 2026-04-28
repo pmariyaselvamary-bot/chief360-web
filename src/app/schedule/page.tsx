@@ -100,26 +100,27 @@ export default function SchedulePage() {
             </div>
         );
     }
-    const handleAddBlock = async () => {
-    try {
-        const saved = await ApiService.createSchedule(newBlock);
-        setTimeBlocks(prev => [...prev, saved]);
-        setShowAddBlock(false);
-        setNewBlock({ title: '', type: 'working', startTime: '', endTime: '' });
-    }
-    const handleAddTask = async () => {
-    try {
-        const saved = await ApiService.createTask(newTask);
-        setTasks(prev => [...prev, saved]);
-        setShowAddTask(false);
-        setNewTask({ title: '', context: '', deadline: '', highImpact: false });
-    } catch (error) {
-        console.error("Failed to add task", error);
-    }
+   const handleAddBlock = async () => {
+        try {
+            const saved = await ApiService.createSchedule(newBlock);
+            setTimeBlocks(prev => [...prev, saved]);
+            setShowAddBlock(false);
+            setNewBlock({ title: '', type: 'working', startTime: '', endTime: '' });
         } catch (error) {
-        console.error("Failed to add block", error);
-    }
-};
+            console.error("Failed to add block", error);
+        }
+    };
+
+    const handleAddTask = async () => {
+        try {
+            const saved = await ApiService.createTask(newTask);
+            setTasks(prev => [...prev, saved]);
+            setShowAddTask(false);
+            setNewTask({ title: '', context: '', deadline: '', highImpact: false });
+        } catch (error) {
+            console.error("Failed to add task", error);
+        }
+    };
 
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto h-full overflow-y-auto w-full">
