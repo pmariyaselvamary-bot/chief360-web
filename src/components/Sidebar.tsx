@@ -1,15 +1,21 @@
 "use client";
 
-import { LayoutDashboard, Users, BrainCircuit, Activity, Settings, Bell, Search, X, Calendar } from "lucide-react";
+import { LayoutDashboard, Users, BrainCircuit, Activity, Settings, Bell, Search, X, Calendar, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useState } from "react";
 
 export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolean) => void }) {
     const pathname = usePathname();
     const { user } = useAuthStore();
-
+    const [isDark, setIsDark] = useState(true);
+    const toggleTheme = () => {
+    const newMode = !isDark;
+        setIsDark(newMode);
+        document.documentElement.className = newMode ? 'dark' : 'light';
+    };
     const navItems = [
         { name: "Command Dashboard", href: "/", icon: LayoutDashboard },
         { name: "Executive Pipeline", href: "/schedule", icon: Calendar },
@@ -77,6 +83,10 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
                 </nav>
 
                 <div className="px-4 mt-auto space-y-3 pt-6 border-t border-white/5">
+                    <button onClick={toggleTheme} className="flex items-center gap-4 px-4 py-4 rounded-xl transition-all text-white/60 hover:text-white hover:bg-white/5 w-full">
+                        {isDark ? <Sun className="w-7 h-7" /> : <Moon className="w-7 h-7" />}
+                        <span className="text-lg tracking-wide">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+                    </button>
                     <Link
                         href="/notifications"
                         onClick={() => setIsOpen(false)}
