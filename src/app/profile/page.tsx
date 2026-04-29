@@ -1,21 +1,21 @@
 "use client";
-
-import { Mail, Shield, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Mail, Shield, Loader2, Camera, Trash2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ApiService, UserProfile } from "@/lib/api";
-
-
 export default function ProfilePage() {
     const { user, logout } = useAuthStore();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         async function fetchProfile() {
             try {
                 const data = await ApiService.getProfile();
                 setProfile(data);
+                setAvatarUrl(data?.avatarUrl || null);
             } catch (err) {
                 console.error("Failed to load profile", err);
             } finally {
@@ -24,24 +24,81 @@ export default function ProfilePage() {
         }
         fetchProfile();
     }, []);
-        if (isLoading) {
+
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            const base64 = reader.result as string;
+            setAvatarUrl(base64);
+            try {
+                await ApiService.updateAvatar(base64);
+            } catch (error) {
+                console.error("Failed to upload avatar", error);
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleRemoveAvatar = async () => {
+        setAvatarUrl(null);
+        try {
+            await ApiService.updateAvatar("");
+        } catch (error) {
+            console.error("Failed to remove avatar", error);
+        }
+    };
+
+    if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
                 <Loader2 className="w-10 h-10 animate-spin text-[var(--aurora-pink)]" />
             </div>
         );
     }
-
     const currentProfile = profile || user;
     const displayName = currentProfile?.name || "Executive";
     const displayEmail = currentProfile?.email || "";
     const displayRole = currentProfile?.role || "Executive";
-    
 
     return (
         <div className="p-6 md:p-8 max-w-4xl mx-auto h-full overflow-y-auto w-full">
             <div className="space-y-6 md:space-y-8 pb-20">
-               
+
+                {/* Avatar Section */}
+                <section className="flex flex-col items-center py-8">
+                    <div className="relative w-28 h-28 rounded-full border-2 border-white/10 overflow-hidden shadow-2xl">
+                        {avatarUrl ? (
+                            <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-[var(--aurora-pink)] to-[var(--deep-rose-end)] flex items-center justify-center">
+                                <span className="text-4xl font-bold text-white">
+                                    {displayName.charAt(0).toUpperCase()}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex gap-3 mt-4">
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold transition-all"
+                        >
+                            <Camera className="w-4 h-4" /> Upload Photo
+                        </button>
+                        {avatarUrl && (
+                            <button
+                                onClick={handleRemoveAvatar}
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-semibold transition-all"
+                            >
+                                <Trash2 className="w-4 h-4" /> Remove
+                            </button>
+                        )}
+                    </div>
+                    <input type="file" accept="image/*" ref={fileInputRef} onChange={handleAvatarUpload} className="hidden" />
+                    <h2 className="text-2xl font-bold mt-4">{displayName}</h2>
+                    <p className="text-white/60 mt-1">{displayRole}</p>
+                </section>
 
                 {/* Profile Info */}
                 <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
@@ -54,7 +111,6 @@ export default function ProfilePage() {
                                 <p className="text-lg font-medium">{displayEmail}</p>
                             </div>
                         </div>
-
                         <div className="flex items-center gap-5 py-4 border-b border-white/5">
                             <Shield className="w-6 h-6 text-[var(--aurora-pink)] shrink-0" />
                             <div>
@@ -62,7 +118,6 @@ export default function ProfilePage() {
                                 <p className="text-lg font-medium">{displayRole}</p>
                             </div>
                         </div>
-
                         <div className="flex items-center gap-5 py-4">
                             <Shield className="w-6 h-6 text-emerald-400 shrink-0" />
                             <div>
@@ -74,14 +129,15 @@ export default function ProfilePage() {
                         </div>
                     </div>
                 </section>
+
                 <section className="pb-6">
-    <button
-        onClick={() => { logout(); window.location.href = '/login'; }}
-        className="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all font-semibold text-lg tracking-wide"
-    >
-        Sign Out
-    </button>
-</section>
+                    <button
+                        onClick={() => { logout(); window.location.href = '/login'; }}
+                        className="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all font-semibold text-lg tracking-wide"
+                    >
+                        Sign Out
+                    </button>
+                </section>
             </div>
         </div>
     );
