@@ -282,6 +282,11 @@ export const ApiService = {
             method: 'PATCH',
         });
     },
+    async deleteTask(taskId: string) {
+    return apiFetch<{ message: string }>(`/tasks/${taskId}`, {
+        method: "DELETE",
+    });
+},
 
     // --- Schedules ---
 
