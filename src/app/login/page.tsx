@@ -63,9 +63,7 @@ export default function LoginPage() {
 const [forgotEmail, setForgotEmail] = useState('');
 const [forgotMsg, setForgotMsg] = useState('');
 const [forgotError, setForgotError] = useState('');
-
-const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleForgotPassword = async () => {
     setForgotMsg('');
     setForgotError('');
     try {
