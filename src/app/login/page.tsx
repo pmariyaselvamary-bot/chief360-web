@@ -66,6 +66,10 @@ const [forgotError, setForgotError] = useState('');
 const handleForgotPassword = async () => {
     setForgotMsg('');
     setForgotError('');
+    if (!forgotEmail) {
+        setForgotError('Please enter your email!');
+        return;
+    }
     try {
         const { ApiService } = await import('@/lib/api');
         await ApiService.forgotPassword(forgotEmail);
