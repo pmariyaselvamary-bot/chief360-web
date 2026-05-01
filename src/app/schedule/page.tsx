@@ -106,8 +106,13 @@ const [newTask, setNewTask] = useState({ title: '', context: '', deadline: getDe
     };
 
     const formatDeadline = (dateStr: string) => {
-        return new Date(dateStr).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' });
-    };
+    return new Date(dateStr).toLocaleString('en-IN', { 
+        weekday: 'short', 
+        hour: '2-digit', 
+        minute: '2-digit',
+        timeZone: 'Asia/Kolkata'
+    });
+};    
 
     if (isLoading) {
         return (
