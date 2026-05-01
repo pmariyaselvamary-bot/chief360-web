@@ -1,5 +1,5 @@
 "use client";
-import { Mail, Shield, Loader2, Camera, Trash2, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Shield, Loader2, Camera, Trash2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ApiService, UserProfile } from "@/lib/api";
@@ -9,15 +9,6 @@ export default function ProfilePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [showPasswordForm, setShowPasswordForm] = useState(false);
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [showCurrent, setShowCurrent] = useState(false);
-    const [showNew, setShowNew] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [passwordMsg, setPasswordMsg] = useState('');
-    const [passwordError, setPasswordError] = useState('');
 
     useEffect(() => {
         async function fetchProfile() {
@@ -56,33 +47,6 @@ export default function ProfilePage() {
             await ApiService.updateAvatar("");
         } catch (error) {
             console.error("Failed to remove avatar", error);
-        }
-    };
-
-    const handleChangePassword = async () => {
-        setPasswordMsg('');
-        setPasswordError('');
-        if (!currentPassword || !newPassword || !confirmPassword) {
-            setPasswordError('All fields are required!');
-            return;
-        }
-        if (newPassword !== confirmPassword) {
-            setPasswordError('New passwords do not match!');
-            return;
-        }
-        if (newPassword.length < 6) {
-            setPasswordError('Password must be at least 6 characters!');
-            return;
-        }
-        try {
-            await ApiService.changePassword({ currentPassword, newPassword });
-            setPasswordMsg('Password changed successfully!');
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
-            setShowPasswordForm(false);
-        } catch (error) {
-            setPasswordError('Current password is incorrect!');
         }
     };
 
@@ -164,73 +128,6 @@ export default function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                </section>
-
-                {/* Change Password Section */}
-                <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                            <Lock className="w-6 h-6 text-[var(--aurora-pink)]" />
-                            <h3 className="text-xl font-semibold">Change Password</h3>
-                        </div>
-                        <button
-                            onClick={() => setShowPasswordForm(!showPasswordForm)}
-                            className="text-sm px-4 py-2 rounded-xl bg-[var(--aurora-pink)]/10 text-[var(--aurora-pink)] hover:bg-[var(--aurora-pink)]/20 font-semibold transition-all"
-                        >
-                            {showPasswordForm ? 'Cancel' : 'Change'}
-                        </button>
-                    </div>
-                    {showPasswordForm && (
-                        <div className="space-y-4">
-                            {/* Current Password */}
-                            <div className="relative">
-                                <input
-                                    type={showCurrent ? "text" : "password"}
-                                    placeholder="Current Password"
-                                    value={currentPassword}
-                                    onChange={(e) => setCurrentPassword(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-[var(--aurora-pink)] pr-10"
-                                />
-                                <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40">
-                                    {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </button>
-                            </div>
-                            {/* New Password */}
-                            <div className="relative">
-                                <input
-                                    type={showNew ? "text" : "password"}
-                                    placeholder="New Password"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-[var(--aurora-pink)] pr-10"
-                                />
-                                <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40">
-                                    {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </button>
-                            </div>
-                            {/* Confirm Password */}
-                            <div className="relative">
-                                <input
-                                    type={showConfirm ? "text" : "password"}
-                                    placeholder="Confirm New Password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-[var(--aurora-pink)] pr-10"
-                                />
-                                <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40">
-                                    {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </button>
-                            </div>
-                            {passwordError && <p className="text-red-400 text-sm">{passwordError}</p>}
-                            {passwordMsg && <p className="text-emerald-400 text-sm">{passwordMsg}</p>}
-                            <button
-                                onClick={handleChangePassword}
-                                className="w-full py-3 rounded-xl bg-[var(--aurora-pink)] text-white font-bold hover:opacity-90 transition-all"
-                            >
-                                Update Password
-                            </button>
-                        </div>
-                    )}
                 </section>
 
                 <section className="pb-6">
