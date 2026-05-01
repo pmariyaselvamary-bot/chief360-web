@@ -59,6 +59,24 @@ export default function LoginPage() {
     const [name, setName] = useState('');
     const [twoFactorCode, setTwoFactorCode] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
+const [forgotEmail, setForgotEmail] = useState('');
+const [forgotMsg, setForgotMsg] = useState('');
+const [forgotError, setForgotError] = useState('');
+
+const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotMsg('');
+    setForgotError('');
+    try {
+        const { ApiService } = await import('@/lib/api');
+        await ApiService.forgotPassword(forgotEmail);
+        setForgotMsg('Password reset link sent to your email!');
+        setForgotEmail('');
+    } catch (err) {
+        setForgotError('Email not found. Please check and try again.');
+    }
+};
 
     // --- 3D Tilt Logic Removed ---
 
@@ -261,6 +279,32 @@ export default function LoginPage() {
                                 </div>
                                 </div>
                                 <button className="submit-btn" onMouseDown={handleRipple} type="submit">ACCESS DASHBOARD</button>
+                                <div className="text-center mt-3">
+    <button type="button" onClick={() => setShowForgotPassword(!showForgotPassword)} className="text-sm text-gray-400 hover:text-white transition-colors">
+        Forgot Password?
+    </button>
+</div>
+{showForgotPassword && (
+    <div className="mt-4 p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+        <p className="text-sm text-gray-300 text-center">Enter your email to reset password</p>
+        <input
+            type="email"
+            placeholder="Your email address"
+            value={forgotEmail}
+            onChange={(e) => setForgotEmail(e.target.value)}
+            className="input-field w-full"
+        />
+        {forgotError && <p className="text-red-400 text-sm">{forgotError}</p>}
+        {forgotMsg && <p className="text-emerald-400 text-sm">{forgotMsg}</p>}
+        <button
+            type="button"
+            onClick={handleForgotPassword}
+            className="submit-btn w-full"
+        >
+            SEND RESET LINK
+        </button>
+    </div>
+)}
                             </>
                         ) : (
                             <>
