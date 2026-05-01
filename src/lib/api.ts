@@ -288,6 +288,12 @@ export const ApiService = {
     async getSchedules() {
         return apiFetch<ScheduleBlock[]>("/schedules");
     },
+    async forgotPassword(email: string) {
+    return apiFetch<{ message: string }>("/auth/forgot-password", {
+        method: "POST",
+        body: { email },
+    });
+},
     async changePassword(data: { currentPassword: string; newPassword: string }) {
         return apiFetch<{ message: string }>("/auth/change-password", {
             method: "POST",
