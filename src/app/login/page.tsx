@@ -279,32 +279,11 @@ const handleForgotPassword = async (e: React.FormEvent) => {
                                 </div>
                                 </div>
                                 <button className="submit-btn" onMouseDown={handleRipple} type="submit">ACCESS DASHBOARD</button>
-                                <div className="text-center mt-3">
-    <button type="button" onClick={() => setShowForgotPassword(!showForgotPassword)} className="text-sm text-gray-400 hover:text-white transition-colors">
+                              <div className="text-center mt-3">
+    <button type="button" onClick={() => setShowForgotPassword(true)} className="text-sm text-gray-400 hover:text-white transition-colors">
         Forgot Password?
     </button>
 </div>
-{showForgotPassword && (
-    <div className="mt-4 p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
-        <p className="text-sm text-gray-300 text-center">Enter your email to reset password</p>
-        <input
-            type="email"
-            placeholder="Your email address"
-            value={forgotEmail}
-            onChange={(e) => setForgotEmail(e.target.value)}
-            className="input-field w-full"
-        />
-        {forgotError && <p className="text-red-400 text-sm">{forgotError}</p>}
-        {forgotMsg && <p className="text-emerald-400 text-sm">{forgotMsg}</p>}
-        <button
-            type="button"
-            onClick={handleForgotPassword}
-            className="submit-btn w-full"
-        >
-            SEND RESET LINK
-        </button>
-    </div>
-)}
                             </>
                         ) : (
                             <>
@@ -324,6 +303,30 @@ const handleForgotPassword = async (e: React.FormEvent) => {
                             </>
                         )}
                     </form>
+                    {showForgotPassword && (
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
+        <div style={{background:'#1a1a2e',border:'1px solid rgba(255,255,255,0.15)',borderRadius:'20px',padding:'32px',width:'100%',maxWidth:'380px'}}>
+            <h3 style={{color:'white',fontWeight:'bold',fontSize:'20px',marginBottom:'8px',textAlign:'center'}}>Forgot Password</h3>
+            <p style={{color:'#aaa',fontSize:'13px',textAlign:'center',marginBottom:'20px'}}>Enter your email to receive a reset link</p>
+            <input
+                type="email"
+                placeholder="Your email address"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                className="input-field"
+                style={{width:'100%',marginBottom:'12px',boxSizing:'border-box'}}
+            />
+            {forgotError && <p style={{color:'#f87171',fontSize:'13px',marginBottom:'8px'}}>{forgotError}</p>}
+            {forgotMsg && <p style={{color:'#34d399',fontSize:'13px',marginBottom:'8px'}}>{forgotMsg}</p>}
+            <button type="button" onClick={handleForgotPassword} className="submit-btn" style={{width:'100%',marginBottom:'10px'}}>
+                SEND RESET LINK
+            </button>
+            <button type="button" onClick={() => {setShowForgotPassword(false);setForgotEmail('');setForgotMsg('');setForgotError('');}} style={{width:'100%',background:'none',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'12px',color:'#aaa',cursor:'pointer',fontSize:'14px',padding:'10px'}}>
+                Cancel
+            </button>
+        </div>
+    </div>
+)}
 
                 </div>
             </div>
