@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Clock, Calendar, Briefcase, Coffee, Plus, CheckCircle2, Play, Loader2 } from "lucide-react";
+import { Clock, Calendar, Briefcase, Coffee, Plus, CheckCircle2, Play, Loader2, Trash2 } from "lucide-react";
 import { ApiService, ScheduleBlock, TaskItem } from "@/lib/api";
 
 export default function SchedulePage() {
@@ -10,7 +10,15 @@ export default function SchedulePage() {
     const [tasks, setTasks] = useState<TaskItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showAddTask, setShowAddTask] = useState(false);
-    const [newTask, setNewTask] = useState({ title: '', context: '', deadline: '', highImpact: false });
+    const getDefaultDeadline = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 30);
+    const offset = 5.5 * 60;
+    const ist = new Date(now.getTime() + (offset - now.getTimezoneOffset()) * 60000);
+    return ist.toISOString().slice(0, 16);
+};
+
+const [newTask, setNewTask] = useState({ title: '', context: '', deadline: getDefaultDeadline(), highImpact: false });
     const [showAddBlock, setShowAddBlock] = useState(false);
     const [newBlock, setNewBlock] = useState({ title: '', type: 'working', startTime: '', endTime: '' });
 
@@ -41,6 +49,14 @@ export default function SchedulePage() {
             setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
         }
     };
+    const deleteTask = async (id: string) => {
+    try {
+        await ApiService.deleteTask(id);
+        setTasks(tasks.filter(t => t.id !== id));
+    } catch (error) {
+        console.error("Failed to delete task", error);
+    }
+};
 
     // Dynamically compute pipeline stats from real data
     const pipelineStats = useMemo(() => {
@@ -279,6 +295,12 @@ export default function SchedulePage() {
                                                     }`}>
                                                     {formatDeadline(task.deadline)}
                                                 </span>
+                                                <button
+                                            onClick={(e) => { e.stopPropagation(); deleteTask(task.id); }}
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity text-white/30 hover:text-red-400 p-1"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
                                             </div>
                                         </div>
                                     </div>
