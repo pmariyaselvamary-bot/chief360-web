@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolean) => void }) {
     const pathname = usePathname();
@@ -13,6 +13,30 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const { user } = useAuthStore();
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
+    useEffect(() => {
+    const interval = setInterval(async () => {
+        const notifEnabled = localStorage.getItem('notifEnabled');
+        if (notifEnabled === 'false') return;
+        if (Notification.permission !== 'granted') return;
+        try {
+            const { ApiService } = await import('@/lib/api');
+            const tasks = await ApiService.getTasks();
+            const now = new Date();
+            tasks.forEach((task: any) => {
+                if (task.completed) return;
+                const deadline = new Date(task.deadline);
+                const diff = (deadline.getTime() - now.getTime()) / 60000;
+                if (diff > 0 && diff <= 10) {
+                    new Notification('⏰ Chief360 Deadline Alert', {
+                        body: `"${task.title}" deadline in ${Math.round(diff)} minutes!`,
+                        icon: '/favicon.ico',
+                    });
+                }
+            });
+        } catch (err) {}
+    }, 60000);
+    return () => clearInterval(interval);
+}, []);
     const toggleTheme = () => {
     const newMode = !isDark;
         setIsDark(newMode);
