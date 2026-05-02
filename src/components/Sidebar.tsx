@@ -13,6 +13,13 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const { user } = useAuthStore();
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
+    useEffect(() => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('SW registered:', reg))
+            .catch(err => console.log('SW error:', err));
+    }
+}, []);
 useEffect(() => {
     const notifiedTasks = new Set<string>();
     const interval = setInterval(async () => {
