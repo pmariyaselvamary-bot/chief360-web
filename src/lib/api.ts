@@ -318,4 +318,9 @@ export const ApiService = {
             body: data,
         });
     },
+    async deleteSchedule(id: string) {
+        return apiFetch<void>(`/schedules/${id}`, {
+            method: "DELETE",
+        });
+    },
 };
