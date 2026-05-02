@@ -13,7 +13,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const { user } = useAuthStore();
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
-    useEffect(() => {
+useEffect(() => {
     const notifiedTasks = new Set<string>();
     const interval = setInterval(async () => {
         if (Notification.permission !== 'granted') return;
