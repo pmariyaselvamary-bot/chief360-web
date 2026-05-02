@@ -245,6 +245,12 @@ export const ApiService = {
     async getNotifications() {
         return apiFetch<NotificationItem[]>("/notifications");
     },
+    async createNotification(data: { title: string; message: string; type: string; icon: string }) {
+    return apiFetch<{ message: string }>("/notifications", {
+        method: "POST",
+        body: data,
+    });
+},
 
     async markNotificationRead(id: string) {
         return apiFetch(`/notifications/${id}/read`, {
