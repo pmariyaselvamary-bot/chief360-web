@@ -13,9 +13,7 @@ export default function SchedulePage() {
     const getDefaultDeadline = () => {
     const now = new Date();
     now.setMinutes(now.getMinutes() + 30);
-    const offset = 5.5 * 60;
-    const ist = new Date(now.getTime() + (offset - now.getTimezoneOffset()) * 60000);
-    return ist.toISOString().slice(0, 16);
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 };
 
 const [newTask, setNewTask] = useState({ title: '', context: '', deadline: getDefaultDeadline(), highImpact: false });
