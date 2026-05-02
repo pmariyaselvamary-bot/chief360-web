@@ -55,6 +55,14 @@ const [newTask, setNewTask] = useState({ title: '', context: '', deadline: getDe
         console.error("Failed to delete task", error);
     }
 };
+    const deleteBlock = async (id: string) => {
+    try {
+        await ApiService.deleteSchedule(id);
+        setTimeBlocks(timeBlocks.filter(b => b.id !== id));
+    } catch (error) {
+        console.error("Failed to delete block", error);
+    }
+};
 
     // Dynamically compute pipeline stats from real data
     const pipelineStats = useMemo(() => {
@@ -229,17 +237,23 @@ const [newTask, setNewTask] = useState({ title: '', context: '', deadline: getDe
                                             <span className="text-xs md:text-sm font-mono text-white/40">{formatTime(block.endTime)}</span>
                                         </div>
 
-                                        <div className={`flex-1 p-4 rounded-xl border-l-4 border-y border-r border-y-white/5 border-r-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:translate-x-1 ${getBlockColor(block.type)}`}>
-                                            <div className="flex items-start md:items-center gap-3">
-                                                {getBlockIcon(block.type)}
-                                                <div>
-                                                    <h3 className="text-base md:text-lg font-bold text-white/90 tracking-wide">{block.title}</h3>
-                                                    {block.context && (
-                                                        <p className="text-xs md:text-sm uppercase tracking-widest opacity-70 mt-1 font-semibold">{block.context}</p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
+                                       <div className={`flex-1 p-4 rounded-xl border-l-4 border-y border-r border-y-white/5 border-r-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:translate-x-1 ${getBlockColor(block.type)}`}>
+    <div className="flex items-start md:items-center gap-3">
+        {getBlockIcon(block.type)}
+        <div>
+            <h3 className="text-base md:text-lg font-bold text-white/90 tracking-wide">{block.title}</h3>
+            {block.context && (
+                <p className="text-xs md:text-sm uppercase tracking-widest opacity-70 mt-1 font-semibold">{block.context}</p>
+            )}
+        </div>
+    </div>
+    <button
+        onClick={(e) => { e.stopPropagation(); deleteBlock(block.id); }}
+        className="text-white/30 hover:text-red-400 p-1 ml-auto"
+    >
+        <Trash2 className="w-4 h-4" />
+    </button>
+</div>
                                     </div>
                                 ))
                             ) : (
@@ -300,7 +314,7 @@ const [newTask, setNewTask] = useState({ title: '', context: '', deadline: getDe
                                                 </span>
                                                 <button
                                             onClick={(e) => { e.stopPropagation(); deleteTask(task.id); }}
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity text-white/30 hover:text-red-400 p-1"
+                                           className="text-white/30 hover:text-red-400 p-1"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                         </button>
