@@ -29,6 +29,7 @@ useEffect(() => {
                 if (notifiedTasks.has(task.id)) continue;
                 const deadline = new Date(task.deadline);
                 const diff = (deadline.getTime() - now.getTime()) / 60000;
+                console.log(`${task.title} diff: ${diff} minutes, deadline: ${deadline.toISOString()}, now: ${now.toISOString()}`);
                 if (diff > 0 && diff <= 10) {
                     notifiedTasks.add(task.id);
                     new Notification('⏰ Chief360 Deadline Alert', {
