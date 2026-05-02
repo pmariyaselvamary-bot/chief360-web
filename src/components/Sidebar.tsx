@@ -38,24 +38,10 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
                 console.log(`${task.title} diff: ${diff} minutes, deadline: ${deadline.toISOString()}, now: ${now.toISOString()}`);
               if (diff > 0 && diff <= 10) {
                     notifiedTasks.add(task.id);
-                    try {
-                        const { LocalNotifications } = await import('@capacitor/local-notifications');
-                        await LocalNotifications.schedule({
-                            notifications: [{
-                                title: '⏰ Chief360 Deadline Alert',
-                                body: `"${task.title}" deadline in ${Math.round(diff)} minutes!`,
-                                id: Math.floor(Math.random() * 10000),
-                                schedule: { at: new Date(Date.now() + 1000) },
-                            }]
-                        });
-                    } catch (e) {
-                        if (Notification.permission === 'granted') {
-                            new Notification('⏰ Chief360 Deadline Alert', {
-                                body: `"${task.title}" deadline in ${Math.round(diff)} minutes!`,
-                                icon: '/favicon.ico',
-                            });
-                        }
-                    }
+                 new Notification('⏰ Chief360 Deadline Alert', {
+                        body: `"${task.title}" deadline in ${Math.round(diff)} minutes!`,
+                        icon: '/favicon.ico',
+                    });
                     try {
                         await ApiService.createNotification({
                             title: 'Deadline Alert',
