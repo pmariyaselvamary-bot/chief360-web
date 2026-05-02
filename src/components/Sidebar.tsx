@@ -14,11 +14,35 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
     useEffect(() => {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('SW registered:', reg))
-            .catch(err => console.log('SW error:', err));
-    }
+    const initFCM = async () => {
+        try {
+            const { initializeApp, getApps } = await import('firebase/app');
+            const { getMessaging, getToken } = await import('firebase/messaging');
+            const firebaseConfig = {
+                apiKey: "AIzaSyCLFwe1ykSKjccZG2NQfhlpEqeJnnJu--o",
+                authDomain: "chief360-223e4.firebaseapp.com",
+                projectId: "chief360-223e4",
+                storageBucket: "chief360-223e4.firebasestorage.app",
+                messagingSenderId: "744083138823",
+                appId: "1:744083138823:web:c322e9290e00f1bad1bda2"
+            };
+            const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+            const messaging = getMessaging(app);
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                const token = await getToken(messaging, {
+                    vapidKey: 'BJkKtLF6GhuZpLRm0XOOtDxieydn59tCoQ5slOgTzzclAYWJm9mkJszN2lWcXot0BtXq_yrmnc4c1tcLi1mCDpY'
+                });
+                if (token) {
+                    localStorage.setItem('fcmToken', token);
+                    console.log('FCM Token:', token);
+                }
+            }
+        } catch (e) {
+            console.log('FCM init error:', e);
+        }
+    };
+    initFCM();
 }, []);
 useEffect(() => {
     const notifiedTasks = new Set<string>();
