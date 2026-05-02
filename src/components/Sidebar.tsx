@@ -14,27 +14,36 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
     const [isDark, setIsDark] = useState(true);
     const [search, setSearch] = useState('');
     useEffect(() => {
+    const notifiedTasks = new Set<string>();
     const interval = setInterval(async () => {
-        const notifEnabled = localStorage.getItem('notifEnabled');
-        if (notifEnabled === 'false') return;
         if (Notification.permission !== 'granted') return;
         try {
             const { ApiService } = await import('@/lib/api');
             const tasks = await ApiService.getTasks();
             const now = new Date();
-            tasks.forEach((task: any) => {
-                if (task.completed) return;
+            for (const task of tasks) {
+                if (task.completed) continue;
+                if (notifiedTasks.has(task.id)) continue;
                 const deadline = new Date(task.deadline);
                 const diff = (deadline.getTime() - now.getTime()) / 60000;
                 if (diff > 0 && diff <= 10) {
+                    notifiedTasks.add(task.id);
                     new Notification('⏰ Chief360 Deadline Alert', {
                         body: `"${task.title}" deadline in ${Math.round(diff)} minutes!`,
                         icon: '/favicon.ico',
                     });
+                    try {
+                        await ApiService.createNotification({
+                            title: 'Deadline Alert',
+                            message: `"${task.title}" deadline in ${Math.round(diff)} minutes!`,
+                            type: 'warning',
+                            icon: 'Clock'
+                        });
+                    } catch (e) {}
                 }
-            });
+            }
         } catch (err) {}
-    }, 60000);
+    }, 30000);
     return () => clearInterval(interval);
 }, []);
     const toggleTheme = () => {
