@@ -23,7 +23,9 @@ useEffect(() => {
         try {
             const { ApiService } = await import('@/lib/api');
             const tasks = await ApiService.getTasks();
-            const now = new Date();
+           const now = new Date();
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const nowIST = new Date(now.getTime() + istOffset + now.getTimezoneOffset() * 60000);
             for (const task of tasks) {
                 if (task.completed) continue;
                 if (notifiedTasks.has(task.id)) continue;
