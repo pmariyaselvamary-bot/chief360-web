@@ -16,6 +16,9 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
 useEffect(() => {
     const notifiedTasks = new Set<string>();
     const interval = setInterval(async () => {
+        if (Notification.permission === 'default') {
+    await Notification.requestPermission();
+}
         if (Notification.permission !== 'granted') return;
         try {
             const { ApiService } = await import('@/lib/api');
@@ -43,7 +46,7 @@ useEffect(() => {
                 }
             }
         } catch (err) {}
-    }, 30000);
+       }, 10000);
     return () => clearInterval(interval);
 }, []);
     const toggleTheme = () => {
