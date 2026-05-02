@@ -24,13 +24,12 @@ useEffect(() => {
             const { ApiService } = await import('@/lib/api');
             const tasks = await ApiService.getTasks();
            const now = new Date();
-            const istOffset = 5.5 * 60 * 60 * 1000;
-            const nowIST = new Date(now.getTime() + istOffset + now.getTimezoneOffset() * 60000);
+            const nowIST = new Date();
             for (const task of tasks) {
                 if (task.completed) continue;
                 if (notifiedTasks.has(task.id)) continue;
                 const deadline = new Date(task.deadline);
-               const diff = (deadline.getTime() - nowIST.getTime()) / 60000;
+                const diff = (new Date(task.deadline).getTime() - new Date().getTime()) / 60000;
                 console.log(`${task.title} diff: ${diff} minutes, deadline: ${deadline.toISOString()}, now: ${now.toISOString()}`);
                 if (diff > 0 && diff <= 10) {
                     notifiedTasks.add(task.id);
