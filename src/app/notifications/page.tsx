@@ -18,12 +18,14 @@ function timeAgo(dateStr: string): string {
 export default function NotificationsPage() {
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [notifEnabled, setNotifEnabled] = useState(true);
+   const [notifEnabled, setNotifEnabled] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const saved = localStorage.getItem('notifEnabled');
+    return saved === null ? true : saved === 'true';
+});
 
     useEffect(() => {
-        const saved = localStorage.getItem('notifEnabled');
-        if (saved !== null) setNotifEnabled(saved === 'true');
-
+        
         async function fetchNotifications() {
             try {
                 const data = await ApiService.getNotifications();
