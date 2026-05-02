@@ -63,19 +63,20 @@ export default function NotificationsPage() {
         return () => clearInterval(interval);
     }, []);
 
-    const toggleNotifications = async () => {
-        if (!notifEnabled) {
-            const permission = await Notification.requestPermission();
-            if (permission !== 'granted') {
-                alert('Please allow notifications in browser settings!');
-                return;
+   const toggleNotifications = async () => {
+    if (!notifEnabled) {
+        try {
+            if ('Notification' in window) {
+                await Notification.requestPermission();
             }
-        }
-        const newVal = !notifEnabled;
-        setNotifEnabled(newVal);
-        localStorage.setItem('notifEnabled', String(newVal));
-    };
-
+        } catch (e) {}
+        setNotifEnabled(true);
+        localStorage.setItem('notifEnabled', 'true');
+    } else {
+        setNotifEnabled(false);
+        localStorage.setItem('notifEnabled', 'false');
+    }
+};
     const markAllRead = async () => {
         try {
             await ApiService.markAllNotificationsRead();
